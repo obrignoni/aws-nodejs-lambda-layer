@@ -1,0 +1,44 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "Serverless webpack template with lambda layer",
+  "scripts": {
+    "deploy:dev": "sls deploy -s dev",
+    "deploy:prod": "sls deploy -s prod",
+    "deploy:layer:dev": "export SLS_STAGE=dev && ./node_modules/.bin/webpack-cli --config webpack.layer.config.js && sls deploy -c serverless.layer.yml -s dev",
+    "deploy:layer:prod": "export SLS_STAGE=prod && ./node_modules/.bin/webpack-cli --config webpack.layer.config.js && sls deploy -c serverless.layer.yml -s prod",
+    "remove:layer:dev": "sls remove -c serverless.layer.yml -s dev"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^6.0.2",
+    "lodash.kebabcase": "^4.1.1",
+    "lodash.startcase": "^4.4.0",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "author": "Osvaldo Brignoni",
+  "license": "MIT",
+  "customServerlessConfig": {
+    "profile": "tracker",
+    "region": "us-east-1",
+    "layer": {
+      "entry": "src/_index.js"
+    },
+    "functions": [
+      {
+        "name": "helloWorld"
+      },
+      {
+        "name": "generateUuid"
+      }
+    ]
+  },
+  "dependencies": {
+    "uuid": "^8.1.0"
+  }
+}

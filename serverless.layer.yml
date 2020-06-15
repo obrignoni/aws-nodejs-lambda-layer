@@ -1,0 +1,12 @@
+service: ${file(./serverless.config.js):serverlessLayer.service}
+
+provider: 
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: ${file(./serverless.config.js):serverlessLayer.runtime}
+  region: ${opt:region, '${file(./serverless.config.js):serverlessLayer.region}'}
+  profile: ${file(./serverless.config.js):serverlessLayer.profile}
+  environment:
+    REGION: '${file(./serverless.config.js):serverlessLayer.region}'
+
+layers: ${file(./serverless.config.js):serverlessLayer.layers}

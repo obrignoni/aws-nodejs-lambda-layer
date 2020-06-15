@@ -1,0 +1,41 @@
+service: ${file(./serverless.config.js):serverless.service}
+
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: ${file(./serverless.config.js):serverless.runtime}
+  region: ${opt:region, '${file(./serverless.config.js):serverlessLayer.region}'}
+  profile: ${file(./serverless.config.js):serverless.profile}
+  environment:
+    STAGE: ${self:provider.stage}
+
+functions:
+  generateUuid:
+    handler: lambda/generateUuid.handler
+    layers:
+      - ${cf:hello-world-layer-${self:provider.stage}.HelloWorldLambdaLayerQualifiedArn}
+
+  helloWorld:
+    handler: lambda/helloWorld.handler
+    layers:
+      - ${cf:hello-world-layer-${self:provider.stage}.HelloWorldLambdaLayerQualifiedArn}
+    # destinations:
+    #   onSuccess: arn:aws:sns:us-east-1:640093813109:hello-world-hello-world-success
+    #   onFailure: arn:aws:sns:us-east-1:640093813109:hello-world-hello-world-failure
+
+package:
+  individually: true
+
+# resources:
+#   Resources:
+#     HelloWorldSuccessTopic:
+#       Type: AWS::SNS::Topic
+#       Properties: 
+#         TopicName: ${file(./serverless.config.js):serverless.service}-hello-world-success
+#     HelloWorldFailureTopic:
+#       Type: AWS::SNS::Topic
+#       Properties: 
+#         TopicName: ${file(./serverless.config.js):serverless.service}-hello-world-failure
